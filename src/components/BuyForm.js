@@ -1,17 +1,13 @@
-import React, { Component } from "react";
+import React, { Component, useRef, useState } from "react";
 
 import tokenLogo from "../token-logo.png";
 import ethLogo from "../eth-logo.png";
 
-class BuyForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      output: "0",
-    };
-  }
+const BuyForm = ({buyTokens, ethBalance, tokenBalance}) => {
 
-  render() {
+  const [output, setOutput] = useState("0")  
+  const inputRef = useRef(null)
+
     return (
       <form
         className="mb-3"
@@ -19,9 +15,9 @@ class BuyForm extends Component {
           event.preventDefault();
           event.preventDefault();
           let etherAmount;
-          etherAmount = this.input.value.toString();
+          etherAmount = inputRef.current.value.toString();
           etherAmount = window.web3.utils.toWei(etherAmount, "Ether");
-          this.props.buyTokens(etherAmount);
+          buyTokens(etherAmount);
         }}
       >
         <div>
@@ -29,21 +25,19 @@ class BuyForm extends Component {
             <b>Input</b>
           </label>
           <span className="float-right text-muted">
-            Balance: {window.web3.utils.fromWei(this.props.ethBalance, "Ether")}
+            Balance: {window.web3.utils.fromWei(ethBalance, "Ether")}
           </span>
         </div>
         <div className="input-group mb-4">
           <input
             type="text"
-            onChange={(event) => {
-              const etherAmount = this.input.value.toString();
-              this.setState({
-                output: etherAmount * 100,
-              });
+            onChange={() => {
+              const etherAmount = inputRef.current.value.toString();
+              setOutput(
+               etherAmount * 100,
+              );
             }}
-            ref={(input) => {
-              this.input = input;
-            }}
+            ref={inputRef}
             className="form-control form-control-lg"
             placeholder="0"
             required
@@ -61,7 +55,7 @@ class BuyForm extends Component {
           </label>
           <span className="float-right text-muted">
             Balance:{" "}
-            {window.web3.utils.fromWei(this.props.tokenBalance, "Ether")}
+            {window.web3.utils.fromWei(tokenBalance, "Ether")}
           </span>
         </div>
         <div className="input-group mb-2">
@@ -69,7 +63,7 @@ class BuyForm extends Component {
             type="text"
             className="form-control form-control-lg"
             placeholder="0"
-            value={this.state.output}
+            value={output}
             disabled
           />
           <div className="input-group-append">
@@ -88,7 +82,6 @@ class BuyForm extends Component {
         </button>
       </form>
     );
-  }
 }
 
 export default BuyForm;
