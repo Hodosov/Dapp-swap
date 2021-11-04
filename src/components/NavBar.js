@@ -1,9 +1,25 @@
 import React from "react";
 import Identicon from "identicon.js";
 
-const  NavBar = ({account}) => {
-    return (
-      <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import { Grid } from "@mui/material";
+
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+  root: {
+    backgroundColor: '#1D283C !important',
+  },
+});
+
+const NavBar = ({ account }) => {
+  const classes = useStyles();
+
+  return (
+    <AppBar position="static" className={classes.root}>
+      <Toolbar>
+        <Grid container justifyContent="space-between" alignItems="center">
         <a
           className="navbar-brand col-sm-3 col-md-2 mr-0"
           href="http://www.dappuniversity.com/bootcamp"
@@ -34,8 +50,10 @@ const  NavBar = ({account}) => {
             )}
           </li>
         </ul>
-      </nav>
-    );
-}
+        </Grid>
+      </Toolbar>
+    </AppBar>
+  );
+};
 
 export default NavBar;
