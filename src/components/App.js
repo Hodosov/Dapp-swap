@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import Web3 from "web3";
-import logo from "../logo.png";
+import Token from "../abis/Token.json";
+import EthSwap from "../abis/EthSwap.json";
 import "./App.css";
 import NavBar from "./NavBar";
+import Main from "./Main";
 
 class App extends Component {
   async componentWillMount() {
@@ -14,17 +16,30 @@ class App extends Component {
     const web3 = window.web3;
     const [account] = await web3.eth.getAccounts()
     this.setState({account})
-    const ethBallance = await web3.eth.getBalance(account)
-    this.setState({ethBallance})
+    const ethBalance = await web3.eth.getBalance(account)
+    this.setState({ ethBalance })
 
+    const networkId = await web3.eth.net.getId();
+    const tokenData = Token.networks[networkId];
+    if (tokenData) {
+      const token = new web3.eth.Contract(Token.abi, tokenData.address);
+      this.setState({ token });
+      let tokenBalance = await token.methods.balanceOf(this.state.account).call()
+      this.setState({ tokenBalance: tokenBalance.toString() });
+    }
+
+    const ethSwapData = EthSwap.networks[networkId];
+    if (ethSwapData) {
+      const ethSwap = new web3.eth.Contract(EthSwap.abi, ethSwapData.address);
+      this.setState({ ethSwap });
+    }
   }
 
   async loadWeb3() {
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         await window.ethereum.enable();
-      }
-      else if (window.web3) {
+    } else if (window.web3) {
         window.web3 = new Web3(window.web3.currentProvider);
       } else {
         console.log(
@@ -33,48 +48,31 @@ class App extends Component {
       }
   }
 
+  buyTokens = (etherAmount) => {
+    this.state.ethSwap.methods.buyTokens().send({ value: etherAmount, from: this.state.account }).on('transactionHash', (hash) => {
+    })
+  }
+
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       account: "",
-      ethBallance: "0"
-    }
+      token: {},
+      ethSwap: "",
+      ethBalance: "0",
+      tokenBalance: "0",
+    };
   }
 
   render() {
     return (
       <div>
         <NavBar account={this.state.account} />
-        <div className="container-fluid mt-5">
-          <div className="row">
-            <main role="main" className="col-lg-12 d-flex text-center">
-              <div className="content mr-auto ml-auto">
-                <a
-                  href="http://www.dappuniversity.com/bootcamp"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src={logo} className="App-logo" alt="logo" />
-                </a>
-                <h1>Dapp University Starter Kit</h1>
-                <p>
-                  Edit <code>src/components/App.js</code> and save to reload.
-                </p>
-                <a
-                  className="App-link"
-                  href="http://www.dappuniversity.com/bootcamp"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  LEARN BLOCKCHAIN{" "}
-                  <u>
-                    <b>NOW!! </b>
-                  </u>
-                </a>
-              </div>
-            </main>
-          </div>
-        </div>
+        <Main
+        ethBalance={this.state.ethBalance}
+        tokenBalance={this.state.tokenBalance}
+        buyTokens={this.buyTokens}
+      />
       </div>
     );
   }
