@@ -4,7 +4,6 @@ import SellForm from "./SellForm";
 
 const  Main = ({ethBalance, tokenBalance, buyTokens, sellTokens}) => {
  
-
   const [currentForm, setCurrentForm] = useState('buy')
 
     return (

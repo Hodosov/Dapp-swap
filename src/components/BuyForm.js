@@ -1,4 +1,4 @@
-import React, { Component, useRef, useState } from "react";
+import React, {  useRef, useState } from "react";
 
 import tokenLogo from "../token-logo.png";
 import ethLogo from "../eth-logo.png";
