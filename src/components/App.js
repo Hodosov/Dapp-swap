@@ -15,8 +15,11 @@ const App = () => {
 
   useEffect(async () => {
     await loadWeb3();
-    await loadBlockchainData();
   }, []) 
+
+  useEffect(async () => {
+    await loadBlockchainData();
+  }, [buyTokens]) 
 
   async function loadBlockchainData() {
     const web3 = window.web3;
@@ -57,7 +60,10 @@ const App = () => {
   }
 
  const buyTokens = (etherAmount) => {
-   ethSwap.methods.buyTokens().send({ value: etherAmount, from: account })
+    ethSwap.methods.buyTokens().send({ value: etherAmount, from: account }).on('transactionHash', async () =>  {
+    const ethBalance = await window.web3.eth.getBalance(account)
+    setEthBalance( ethBalance )
+   })
   }
 
   const sellTokens = (tokenAmount) => {
