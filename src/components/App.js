@@ -19,7 +19,7 @@ const App = () => {
 
   useEffect(async () => {
     await loadBlockchainData();
-  }, [buyTokens]) 
+  }, []) 
 
   async function loadBlockchainData() {
     const web3 = window.web3;
