@@ -49,7 +49,12 @@ class App extends Component {
   }
 
   buyTokens = (etherAmount) => {
-    this.state.ethSwap.methods.buyTokens().send({ value: etherAmount, from: this.state.account }).on('transactionHash', (hash) => {
+    this.state.ethSwap.methods.buyTokens().send({ value: etherAmount, from: this.state.account })
+  }
+
+  sellTokens = (tokenAmount) => {
+    this.state.token.methods.approve(this.state.ethSwap.address, tokenAmount).send({ from: this.state.account }).on('transactionHash', (hash) => {
+      this.state.ethSwap.methods.sellTokens(tokenAmount).send({ from: this.state.account })
     })
   }
 
@@ -72,6 +77,7 @@ class App extends Component {
         ethBalance={this.state.ethBalance}
         tokenBalance={this.state.tokenBalance}
         buyTokens={this.buyTokens}
+        sellTokens={this.sellTokens}
       />
       </div>
     );
