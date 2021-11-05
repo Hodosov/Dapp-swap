@@ -1,3 +1,4 @@
 {
-    "ignorePatterns": ["no-undef"]
+    "ignorePatterns": ["no-undef"],
+    "parser": "babel-eslint"
 }
