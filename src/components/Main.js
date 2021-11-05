@@ -2,6 +2,7 @@ import { Button, Grid } from "@mui/material";
 import React, { useState } from "react";
 import BuyForm from "./BuyForm";
 import SellForm from "./SellForm";
+import Earth from './Earth'
 
 const Main = ({ ethBalance, tokenBalance, buyTokens, sellTokens }) => {
   const [currentForm, setCurrentForm] = useState("buy");
@@ -39,6 +40,9 @@ const Main = ({ ethBalance, tokenBalance, buyTokens, sellTokens }) => {
           sellTokens={sellTokens}
         />
       )}
+        </Grid>
+        <Grid item xs={7}>
+          <Earth />
         </Grid>
     </Grid>
   );
