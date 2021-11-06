@@ -78,7 +78,7 @@ const App = () => {
 
 
     return (
-      <div>
+      <div style={{height: "100vh"}}>
         <NavBar account={account} />
         <Main
         ethBalance={ethBalance}

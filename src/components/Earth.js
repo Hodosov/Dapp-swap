@@ -8,28 +8,30 @@ import atmosphereVertexShader from "!!raw-loader!../shaders/atmosphereVertex.gls
 import atmosphereFragmentShader from "!!raw-loader!../shaders/atmosphereFragment.glsl";
 
 import globe from "../earth.jpeg";
-import { Float32BufferAttribute } from "three";
+import { Grid } from "@mui/material";
 
 export default function Earth() {
+  const containerRef = useRef()
   const ref = useRef();
 
   useEffect(() => {
-    if (ref?.current) {
+    if (ref?.current && containerRef?.current) {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(
         75,
-        innerWidth / innerHeight,
+        containerRef.current.offsetWidth / containerRef.current.offsetHeight,
         0.1,
         1000
       );
 
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
+        canvas: ref.current
       });
-      renderer.setSize(innerWidth / 2, innerHeight / 2);
+      renderer.setSize(containerRef.current.offsetWidth, containerRef.current.offsetHeight);
       renderer.setPixelRatio(window.devicePixelRatio);
 
-      ref.current.appendChild(renderer.domElement);
+      // ref.current.appendChild(renderer.domElement);
 
       const sphere = new THREE.Mesh(
         new THREE.SphereGeometry(5, 50, 50),
@@ -84,7 +86,7 @@ export default function Earth() {
       const stars = new THREE.Points(starGeometry, starMaterial);
       scene.add(stars);
 
-      camera.position.z = 10;
+      camera.position.z = 15;
 
       const mouse = {
         x: undefined,
@@ -109,7 +111,9 @@ export default function Earth() {
         mouse.y = -(event.clientY / innerHeight) * 2 + 1;
       });
     }
+
   }, []);
 
-  return <div ref={ref} />;
+  return <Grid style={{    background: "#000000"
+}} item xs={8} ref={containerRef}><canvas ref={ref} /></Grid>;
 }
